@@ -1,0 +1,32 @@
+version: '3.8'
+
+# services
+
+# 1. backend
+services: 
+  backend:
+    build: 
+      context: ./api
+      dockerfile: Dockerfile
+    ports: 
+      - "4003:8080"
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/api-db
+    volumes:
+      - ./api:/app
+    networks:
+      - api-network
+
+
+# mongo
+# postgres
+# redis
+# rabbitmq
+
+
+# volumes
+
+# networks
+networks:
+  api-network:
+    driver: bridge

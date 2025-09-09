@@ -18,15 +18,30 @@ services:
       - api-network
 
 
-# mongo
+# 2. mongo
+  db-mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    networks:
+      - api-network
+    volumes:
+      - db-mongo:/data/db
+    
+
+
 # postgres
 # redis
 # rabbitmq
 
 
-# volumes
-
+ 
 # networks
 networks:
   api-network:
     driver: bridge
+
+# volumes
+volumes:
+  db-mongo:
+ 

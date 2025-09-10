@@ -46,9 +46,62 @@ services:
       - db-mongo
 
 
-# postgres
-# redis
-# rabbitmq
+# 4. postgres
+  db-postgres:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=postgres
+    networks:
+      - api-network
+    volumes: 
+      - db-postgres:/var/lib/postgresql/data
+
+# 5. pgadmiin
+  db-pgadmin:
+    image: dpage/pgadmin4:latest
+    ports: 
+      - "5050:80"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@example.com
+      - PGADMIN_DEFAULT_PASSWORD=password
+    networks:
+      - api-network
+    volumes:
+      - db-postgres:/var/lib/postgresql/data
+    depends_on:
+      - db-postgres
+
+# 6. redis
+  db-redis:
+    image: redis/redis-stack:latest
+    ports:
+      - "6379:6379"
+      - "8001:8001"
+    environment:
+      - REDIS_ARGS=--save 900 1
+    networks:
+      - api-network
+    volumes:
+      - db-redis:/var/lib/redis-stack
+    depends_on:
+      - db-postgres
+    
+
+# 7. rabbitmq
+  db-rabbitmq:
+    image: rabbitmq:3.8-management
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    networks:
+      - api-network
+    volumes:
+      - db-rabbitmq:/var/lib/rabbitmq
+
 
 
  
@@ -60,5 +113,7 @@ networks:
 # volumes
 volumes:
   db-mongo:
-  
+  db-postgres:
+  db-redis:
+  db-rabbitmq:
  
